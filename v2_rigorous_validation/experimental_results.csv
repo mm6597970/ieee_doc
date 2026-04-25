@@ -1,0 +1,28 @@
+Dataset,Kappa,Method,Accuracy,CHR
+TruthfulQA,0.2,Single Agent,0.72,0.28
+TruthfulQA,0.2,Majority Vote,0.782,0.012
+TruthfulQA,0.2,ACCORD,0.745,0.0125
+TruthfulQA,0.5,Single Agent,0.72,0.28
+TruthfulQA,0.5,Majority Vote,0.742,0.054
+TruthfulQA,0.5,ACCORD,0.7475,0.06
+TruthfulQA,0.8,Single Agent,0.72,0.28
+TruthfulQA,0.8,Majority Vote,0.724,0.196
+TruthfulQA,0.8,ACCORD,0.73,0.1925
+FEVER,0.2,Single Agent,0.8,0.2
+FEVER,0.2,Majority Vote,0.884,0.002
+FEVER,0.2,ACCORD,0.88,0.0025
+FEVER,0.5,Single Agent,0.8,0.2
+FEVER,0.5,Majority Vote,0.834,0.036
+FEVER,0.5,ACCORD,0.82,0.0425
+FEVER,0.8,Single Agent,0.8,0.2
+FEVER,0.8,Majority Vote,0.8,0.136
+FEVER,0.8,ACCORD,0.8,0.135
+HotpotQA,0.2,Single Agent,0.8,0.2
+HotpotQA,0.2,Majority Vote,0.878,0.002
+HotpotQA,0.2,ACCORD,0.8825,0.0025
+HotpotQA,0.5,Single Agent,0.8,0.2
+HotpotQA,0.5,Majority Vote,0.836,0.032
+HotpotQA,0.5,ACCORD,0.8475,0.0325
+HotpotQA,0.8,Single Agent,0.8,0.2
+HotpotQA,0.8,Majority Vote,0.806,0.128
+HotpotQA,0.8,ACCORD,0.7925,0.1325

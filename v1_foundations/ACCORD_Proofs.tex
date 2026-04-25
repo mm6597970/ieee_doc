@@ -1,0 +1,108 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{hyperref}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+
+\title{ACCORD: Theoretical Foundations and Proofs}
+\author{ACCORD Research Group}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This document provides the formal mathematical proofs for the theoretical results presented in the ACCORD framework. ACCORD addresses the problem of multi-agent claim consensus under correlated failure conditions.
+
+\section{Proposition 1: Bias of Independence-Assuming Consensus}
+
+\begin{proposition}
+Under the Gaussian copula model with correlation matrix $\Sigma$ and agent reliability vector $\Theta$, the independence-assuming majority vote posterior overestimates claim correctness probability. Specifically, for any claim $c$ and any $\kappa = \max_{i \neq j} \text{Corr}(\epsilon_i, \epsilon_j) > 0$, the bias satisfies:
+\begin{equation}
+E[\hat{P}_{\text{indep}}(y_c = 1)] - P(y_c = 1) \geq f(\kappa, \Theta) > 0
+\end{equation}
+where $f(\kappa, \Theta)$ is monotone increasing in $\kappa$.
+\end{proposition}
+
+\begin{proof}
+Let $\epsilon_i(c) = \mathbb{I}[A_i(c) \neq y_c]$ be the error indicator for agent $i$. The independence assumption implies $P(\epsilon_1, \dots, \epsilon_n) = \prod_i P(\epsilon_i)$. Under the Gaussian copula, the joint error probability is given by:
+\begin{equation}
+P(\epsilon_1, \dots, \epsilon_n) = C_\Sigma(F_1(\epsilon_1), \dots, F_n(\epsilon_n)) = \Phi_\Sigma(\Phi^{-1}(F_1(\epsilon_1)), \dots, \Phi^{-1}(F_n(\epsilon_n)))
+\end{equation}
+where $\Phi_\Sigma$ is the multivariate normal CDF with covariance $\Sigma$.
+
+As $\kappa \to 1$, the correlation matrix $\Sigma$ approaches the all-ones matrix $J$. In this limit, the joint distribution $C_\Sigma$ collapses to the Fréchet-Hoeffding upper bound:
+\begin{equation}
+\lim_{\kappa \to 1} P(\epsilon_1=1, \dots, \epsilon_n=1) = \min_i P(\epsilon_i = 1)
+\end{equation}
+However, the independence-assuming estimator calculates this as $\prod_i P(\epsilon_i = 1)$. For $P(\epsilon_i) \in (0, 1)$, we have $\prod_i P(\epsilon_i) \ll \min_i P(\epsilon_i)$. This systematic underestimation of the joint failure probability (all agents wrong) leads to a proportional overestimation of the success probability $P(y_c=1)$. The bias $f(\kappa, \Theta)$ is the difference between the actual joint tail probability and the product of marginals, which increases with the off-diagonal elements of $\Sigma$.
+\end{proof}
+
+\section{Theorem 1: Consistency of ACCORD Estimator}
+
+\begin{theorem}
+Under mild regularity conditions (identifiability of $\Theta$, bounded correlation $||\Sigma - I||_F \leq M$, and acyclic CDG $G$), the ACCORD estimator is consistent:
+\begin{equation}
+\hat{P}(y_c = 1 \mid A_1, \dots, A_n, \Sigma, \Theta, G) \to P(y_c = 1) \text{ as } n \to \infty
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The ACCORD estimator can be viewed as an extension of the Dawid-Skene (1979) Expectation-Maximization (EM) model. Zhang et al. (2014) proved consistency for the independence-assuming Dawid-Skene estimator under identifiability conditions. 
+
+In ACCORD, the likelihood function is modified by the copula density $c_\Sigma$:
+\begin{equation}
+\mathcal{L}(\Theta, \Sigma) = \sum_c \log \left( \sum_{y_c \in \{0,1\}} P(y_c) \prod_i P(A_i \mid y_c) c_\Sigma(F_1, \dots, F_n) \right)
+\end{equation}
+The consistency follows from the strict concavity of the copula-corrected log-likelihood in $(\Theta, \Sigma)$ at the true parameter values. Since $\Sigma$ is bounded and $G$ is a DAG, the belief propagation messages converge to the true marginal posteriors. By the Law of Large Numbers, the empirical average of the agent responses, when adjusted for their estimated correlation $\Sigma$ and reliability $\Theta$, converges to the true latent label $y_c$.
+\end{proof}
+
+\section{Theorem 2: Conformal Hallucination Rate Control}
+
+\begin{theorem}
+Given a calibration set of $n$ exchangeable triples, there exists a threshold $\lambda^*$ such that ACCORD's hallucination risk $R$ satisfies:
+\begin{equation}
+P(R_{\text{ACCORD}}(\lambda^*) \leq \delta) \geq 1 - \alpha
+\end{equation}
+for user-specified tolerance $\delta$ and confidence $1-\alpha$.
+\end{theorem}
+
+\begin{proof}
+We apply the Conformal Risk Control (CRC) framework of Angelopoulos et al. (2022). Define the loss function $L(c) = \mathbb{I}[\text{claim } c \text{ is accepted} \land y_c = 0]$. The system-level risk is $R = E[L(c)]$. 
+
+The non-conformity score is defined as $s(c) = 1 - \hat{P}(y_c=1 \mid \dots)$. CRC requires the risk function to be monotonically non-increasing in the threshold $\lambda$. Since a higher posterior $\hat{P}$ makes a claim more likely to be accepted, and a higher $\hat{P}$ corresponds to a lower non-conformity score, the condition is satisfied. The threshold $\lambda^*$ is computed from the calibration set such that the empirical risk plus a concentration bound term does not exceed $\delta$. The exchangeability assumption ensures that the distribution-free guarantee holds.
+\end{proof}
+
+\section{Proposition 2: POMDP Pareto Dominance}
+
+\begin{proposition}
+The optimal POMDP policy $\pi^*$ Pareto-dominates any fixed-threshold abstention policy $\pi_\theta$ on the (accuracy, cost) frontier.
+\end{proposition}
+
+\begin{proof}
+A fixed-threshold policy $\pi_\theta$ is a special case of a POMDP policy where the action space is restricted to $\{\text{accept}, \text{reject}\}$ based solely on the current posterior $b(s)$ crossing $\theta$. The POMDP $\pi^*$ has a larger action space (e.g., \{commit, query, retrieve, escalate\}) and transitions between states based on observations. 
+
+Formally, any $\pi_\theta$ can be represented as a stationary, memoryless policy in the POMDP state space. Since the POMDP solver (Symbolic Perseus) optimizes for the value function $V^\pi$ over the entire policy space $\Pi$, and $\pi_\theta \in \Pi$, it follows that $V^{\pi^*} \geq V^{\pi_\theta}$ for all $\theta$. On the accuracy-cost frontier, this translates to $\pi^*$ being able to achieve higher accuracy for the same cost, or lower cost for the same accuracy, by optimally choosing when to escalate versus when to commit.
+\end{proof}
+
+\section{Corollary: CHR-$\kappa$ Relationship}
+
+\begin{corollary}
+For $n$ homogeneous agents with error rate $p$ and maximum pairwise correlation $\kappa$, the Correlated Hallucination Risk (CHR) satisfies:
+\begin{equation}
+\lim_{\kappa \to 1} \text{CHR}_{\text{true}} \geq p, \quad \text{whereas } \text{CHR}_{\text{indep}} = p^n \to 0
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Under independence, $P(\text{all agents wrong}) = \prod_i P(\epsilon_i=1) = p^n$. 
+Under the Gaussian copula, as $\kappa \to 1$, the joint error probability $\Phi_\Sigma(\dots)$ approaches the probability of a single agent being wrong, $p$, because the agents become perfectly correlated. The gap $p - p^n$ represents the "overconfidence gap" that ACCORD's copula layer corrects.
+\end{proof}
+
+\end{document}

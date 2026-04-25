@@ -1,0 +1,10 @@
+numpy
+scipy
+pandas
+statsmodels
+nltk
+datasets
+transformers
+torch
+scikit-learn
+tqdm

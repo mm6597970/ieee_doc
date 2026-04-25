@@ -1,0 +1,92 @@
+Not ready for IEEE
+Major structural, content, and formatting issues need to be fixed before submission
+Technical depth
+3/10
+IEEE formatting
+2/10
+Experimental rigor
+1/10
+Related work
+0/10
+FATAL No actual experiments or results
+Section V claims "our results show ACCORD reduces CHR by up to 61%" — but there are zero tables, zero figures, zero ablations, zero statistical tests. You cannot claim experimental results without showing them. A reviewer will desk-reject this immediately.
+
+No result tables comparing ACCORD vs baselines on TruthfulQA, FEVER, HotpotQA
+No figures showing CHR vs κ (correlation level)
+No training/inference time benchmarks
+No confidence intervals or p-values
+"Up to 61%" is a cherry-picked max — mean improvement is never stated
+FATAL Proofs are stated, not proved
+Theorem 1 (Consistency) and Theorem 2 (Hallucination Control) are listed with no proofs. Proposition 1 has no derivation. At IEEE level, theorems must be formally proved, or at minimum the proof sketch must cite the exact lemmas used. Writing "Theorem 1: ..." followed by nothing is not a proof.
+
+FATAL No related work section
+There is no Section II "Related Work." IEEE papers must contextualize against existing literature. Only 4 references are cited — all from 2022–2023. Missing critical related work on:
+
+Conformal prediction (Vovk et al., Shafer & Vovk)
+Multi-agent debate (Liang et al. 2023, Chan et al. 2023)
+Hallucination detection (Min et al. 2023, Manakul et al. 2023)
+Copula-based modeling in ML
+POMDP in NLP systems
+FATAL IEEE formatting not followed
+Must use IEEE two-column LaTeX template (IEEEtran.cls)
+Abstract exceeds 150 words — IEEE cap is 150
+Author affiliation "ACCORD Frameworks, City, Country" is a placeholder — invalid
+Email "email@accord-research.org" is a placeholder
+No page numbers shown; no header/footer; no DOI block
+Sections are numbered I, II, III... but subsections A, B, C lack roman numeral prefix (should be III-A, III-B etc.)
+Equations not numbered consistently — Eq. (3) is POMDP reward but is not referenced in text
+MAJOR ACCORD estimator is underspecified
+Equation (1) is written as a posterior probability but the actual computation is never defined. How is Σ estimated from agent outputs? How is Θ (per-agent reliability) learned? How is the CDG G constructed — is it given, or inferred? These are the core contributions and they have no algorithmic description.
+
+No algorithm box (Algorithm 1) showing the ACCORD pipeline step by step
+Loopy belief propagation on the CDG is mentioned but never described
+Gaussian copula fitting procedure is omitted entirely
+MAJOR POMDP is incompletely defined
+Section III-D defines a reward function R(s,a) but does not define the observation model P(o|s), the transition model P(s'|s,a), or how the POMDP is solved. Pareto dominance is claimed (Introduction) but never shown.
+
+MAJOR CHR metric is not validated
+The paper introduces CHR (Correlated Hallucination Risk) as a new metric but provides no argument for why it is a meaningful proxy for real-world hallucination harm. No comparison to existing hallucination metrics (FactScore, HaluEval, etc.).
+
+MAJOR Identifiability assumption is unverified
+Theorem 1 requires "identifiability of Θ" — but when is Θ identifiable under a Gaussian copula? This is a non-trivial condition that needs a lemma or citation. In practice, with small n (number of agents), Σ is not identifiable without strong structural assumptions.
+
+MINOR Jargon overload without definition
+Many terms are introduced without definition, which hurts both readability and reviewer accessibility:
+
+"Atomic claim" — never formally defined
+"Soft prediction Aᵢ(cⱼ) ∈ [0,1]" — is this a log-prob? A calibrated score? How obtained?
+"Bounded correlated noise" — what is the bound? Is it assumed or estimated?
+"Pareto dominance" — of what objective space?
+MINOR Scalability not addressed
+Loopy belief propagation on a CDG is NP-hard in general. For long responses with many claims (m can be large), and n agents, the complexity is not analyzed. No discussion of approximate inference methods used in practice.
+
+POSITIVE Core idea is novel and valuable
+The conceptual framing — that agent error correlations undermine majority voting, and that a copula + dependency graph can fix this — is genuinely interesting and publishable. The CRC guarantee is well-motivated. This is worth developing into a real paper.
+
+What's broken — the honest verdict
+This paper reads like a research proposal or extended abstract, not a complete IEEE paper. The core idea is actually solid and novel, but almost everything needed to back it up is missing. A reviewer would desk-reject this in under 5 minutes.
+
+The complete fix list
+1. Run actual experiments — this is the biggest gap. You need to:
+
+Implement ACCORD (even a prototype) on TruthfulQA, FEVER, HotpotQA
+Report full tables: accuracy, CHR, runtime per baseline
+Show ablations: ACCORD without CDG, without copula, without CRC
+Plot CHR vs κ to show your method degrades gracefully as correlation rises
+
+2. Write out the proofs — Theorems 1 and 2 need proper mathematical proof. At minimum, a 3–5 step proof sketch with citations to the lemmas you rely on (e.g. Angelopoulos et al. 2022 for CRC).
+3. Add a Related Work section — at least 15–20 citations covering conformal prediction, multi-agent debate, hallucination metrics, and copula models in ML.
+4. Add an Algorithm box — show the full ACCORD pipeline: how Σ is estimated, how G is built, how belief propagation runs, and how the CRC threshold λ* is chosen.
+5. Fix the author info — "ACCORD Frameworks, City, Country" will get you rejected. Use your real institution.
+
+Quick-fix priority order
+Do these in order — don't jump ahead:
+
+Run experiments first — without real numbers, nothing else matters. Even a small-scale demo on 100 examples is better than empty claims.
+Write the proofs — or explicitly label theorems as "Conjecture" if unproven.
+Add Related Work — cite at least 15 papers.
+Add the Algorithm box — makes the method concrete.
+Fix formatting — real author name/institution, trim abstract to under 150 words, use IEEEtran template.
+Define all terms — atomic claim, soft prediction, bounded noise.
+
+The idea behind ACCORD is genuinely publishable. The skeleton just needs to be filled with real substance.
