@@ -1,0 +1,83 @@
+\textbf{Example output:}
+\texttt{[``Aspirin inhibits COX-1 enzymes'',
+``COX-1 inhibition reduces platelet aggregation'',
+``Reduced platelet aggregation prevents blood clots'']}
+
+\section{Proof of Theorem~\ref{thm:consistency}}
+\label{app:proofB}
+
+\textbf{Step 1 (Identifiability).}
+Let the population equations for crowd-sourcing reliability
+be $\Theta^* = \arg\min \mathbb{E}[\ell(\Theta, \Sigma)]$.
+Under distinct marginal error rates ($p_i \neq p_j$),
+the system is identified by the Dawid-Skene rank
+condition~\cite{zhang2014}: the matrix of pairwise
+agreement probabilities has full rank, ensuring a unique
+solution for $\Theta^*$.
+
+\textbf{Step 2 (Copula MLE consistency).}
+Given identifiable $\Theta^*$, the copula log-likelihood
+$\ell(\Sigma) = \log \Phi_\Sigma(\mathbf{z})$ is strictly concave
+in $\Sigma$ on the bounded set $\|\Sigma\|_2 \leq B$.
+The MLE $\hat{\Sigma} \xrightarrow{p} \Sigma^*$ by standard
+asymptotic MLE theory~\cite{nelsen2006}.
+
+\textbf{Step 3 (Posterior consistency).}
+Given $\hat{\Theta} \xrightarrow{p} \Theta^*$ and
+$\hat{\Sigma} \xrightarrow{p} \Sigma^*$,
+consistency of $\hat{P}(y_c = 1)$ follows from the
+continuous mapping theorem applied to the copula posterior,
+which is a continuous function of $(\hat{\Theta}, \hat{\Sigma})$.
+\qed
+
+\section{Proof of Theorem~\ref{thm:guarantee}}
+\label{app:proofC}
+
+Define the non-conformity score
+$s(c) = 1 - \hat{P}(y_c = 1)$.
+The hallucination risk is:
+$R(\lambda) = \frac{1}{N}\sum_{k=1}^N \mathbf{1}[s(c_k) \leq 1-\lambda, y_k = 0]$,
+which is monotonically non-increasing in $\lambda$.
+
+By Theorem~1 of~\citet{angelopoulos2022crc}, for any
+exchangeable sequence $\{(c_k, y_k)\}_{k=1}^{N+1}$,
+the threshold selected by Eq.~\eqref{eq:crc} satisfies
+$\mathbb{E}[R(\lambda^*)] \leq \delta$.
+The finite-sample correction
+$\hat{\delta}_\alpha = \delta - \sqrt{\frac{\ln(1/\alpha)}{2N}}$
+converts this expectation bound to a
+high-probability bound: $P(R(\lambda^*) \leq \delta) \geq 1 - \alpha$,
+which is exactly Eq.~\eqref{eq:guarantee}.
+
+Exchangeability is guaranteed by the i.i.d.\ assumption
+on calibration data and random splitting. \qed
+
+\section{Hyperparameter Settings}
+\label{app:hyperparams}
+
+\begin{table}[h]
+\caption{Full hyperparameter configuration for reproducibility.}
+\label{tab:hyperparams}
+\centering
+\begin{tabular}{ll}
+\toprule
+Parameter & Value \\
+\midrule
+$\tau_\text{NLI}$ (entailment threshold)    & 0.85 \\
+$\alpha_\text{ema}$ (EMA decay)             & 0.05 \\
+$\lambda_\text{LW}$ (shrinkage intensity)   & analytical (Ledoit-Wolf) \\
+$\delta$ (hallucination tolerance)          & 0.05 \\
+$\alpha$ (CRC confidence complement)        & 0.10 \\
+$\tau_\text{rej}$ (rejection threshold)     & 0.30 \\
+BP iterations (max)                         & 50 \\
+BP convergence tolerance                    & $10^{-4}$ \\
+SARSOP horizon                              & 10{,}000 steps \\
+POMDP observation noise $\sigma$            & 0.05 \\
+Calibration set size per domain             & 500 \\
+Temperature scaling (GPT-4o)               & $T = 1.15$ \\
+Temperature scaling (Llama-3)              & $T = 1.25$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
