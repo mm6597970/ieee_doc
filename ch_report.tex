@@ -1,10 +1,26 @@
 \documentclass[12pt,a4paper]{report}
+
+% ── Encoding and Font ────────────────────────────────────────────
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{graphicx}
+\usepackage{mathptmx}     % Times New Roman style font
+
+% ── Page Layout ─────────────────────────────────────────────────
 \usepackage{geometry}
-\geometry{a4paper, top=1in, bottom=1in, left=1.25in, right=1in}
+\geometry{
+    a4paper,
+    top=1in,
+    bottom=1in,
+    left=1.25in,
+    right=1in
+}
+
+% ── Line Spacing ────────────────────────────────────────────────
 \usepackage{setspace}
+\onehalfspacing           % 1.5 line spacing
+
+% ── Packages ────────────────────────────────────────────────────
+\usepackage{graphicx}
 \usepackage{titlesec}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{hyperref}
@@ -14,81 +30,103 @@
 \usepackage{longtable}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage{fancyhdr}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{parskip}
-\usepackage{tocloft}
-%\usepackage{microtype}
 \usepackage{float}
+\usepackage{tocloft}
+\usepackage{parskip}
 
+% ── TikZ ────────────────────────────────────────────────────────
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows, positioning, calc, fit, backgrounds}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% ── Theorem environments ──────────────────────────────────────────
+% ── Footer Only ─────────────────────────────────────────────────
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+
+\fancyhf{}                 % Clear header and footer
+
+\renewcommand{\headrulewidth}{0pt}   % Remove header line
+\renewcommand{\footrulewidth}{0pt}   % Remove footer line
+
+\fancyfoot[C]{\thepage}   % Page number at center footer
+
+% ── Chapter Formatting ──────────────────────────────────────────
+\titleformat{\chapter}[display]
+{\bfseries\fontsize{15pt}{18pt}\selectfont\centering}
+{Chapter \thechapter}
+{14pt}
+{\bfseries\fontsize{15pt}{18pt}\selectfont}
+
+\titlespacing*{\chapter}{0pt}{20pt}{20pt}
+
+% ── Section Formatting ──────────────────────────────────────────
+\titleformat{\section}
+{\bfseries\fontsize{14pt}{16pt}\selectfont}
+{\thesection}
+{1em}
+{}
+
+% ── Subsection Formatting ───────────────────────────────────────
+\titleformat{\subsection}
+{\bfseries\fontsize{13pt}{15pt}\selectfont}
+{\thesubsection}
+{1em}
+{}
+
+% ── Theorem Environments ────────────────────────────────────────
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
 \newtheorem{definition}{Definition}
 
-% ── Code listing style ────────────────────────────────────────────
+% ── Code Colors ─────────────────────────────────────────────────
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codeblue}{rgb}{0.0,0.0,0.6}
 \definecolor{codegreen}{rgb}{0.0,0.5,0.0}
 \definecolor{codebg}{rgb}{0.97,0.97,0.97}
 
+% ── Python Code Style ───────────────────────────────────────────
 \lstdefinestyle{pythonstyle}{
-  backgroundcolor=\color{codebg},
-  commentstyle=\color{codegreen},
-  keywordstyle=\color{codeblue}\bfseries,
-  numberstyle=\tiny\color{codegray},
-  stringstyle=\color{orange},
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  captionpos=b,
-  keepspaces=true,
-  numbers=left,
-  numbersep=5pt,
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  tabsize=4,
-  frame=single,
-  rulecolor=\color{gray!50},
-  language=Python
+    backgroundcolor=\color{codebg},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{orange},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{gray!50},
+    language=Python
 }
+
 \lstset{style=pythonstyle}
 
-% ── Chapter / section formatting ──────────────────────────────────
-\titleformat{\chapter}[display]
-  {\normalfont\Large\bfseries\centering}
-  {Chapter \thechapter}{14pt}{\Large\bfseries}
-\titlespacing*{\chapter}{0pt}{30pt}{20pt}
-
-\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
-\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
-
-% ── Header / Footer ───────────────────────────────────────────────
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[R]{\small ACCORD: Conformal Risk Control in Multi-Agent LLMs}
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-
-% ── ToC Formatting ────────────────────────────────────────────────
+% ── TOC Names ───────────────────────────────────────────────────
 \renewcommand{\contentsname}{CONTENTS}
 \renewcommand{\listfigurename}{LIST OF FIGURES}
 \renewcommand{\listtablename}{LIST OF TABLES}
 \renewcommand{\bibname}{REFERENCES}
 
+% ── Paragraph Formatting ────────────────────────────────────────
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
 
+% ── Document Starts ─────────────────────────────────────────────
 \begin{document}
-
 
 %=================================================================
 \chapter{INTRODUCTION}
